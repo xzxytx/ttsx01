@@ -48,8 +48,26 @@ $(function(){
 		}
 		else
 		{
-			$('#user_name').next().hide();
-			error_name = false;
+			// if($.get('/register_valid/')){
+				// 　没有相同用户名时对操作
+				$.get('/register_valid/', {'uname':$('#user_name').val()},function (data) {
+					if(data.uname==1)
+						// 此用户名已存在
+						$('#user_name').next().html('此用户名已存在').show();
+					else{
+						$('#user_name').next().hide();
+						// $('#user_name').next().hide();
+					}
+
+                })
+
+				// $('#user_name').next().hide();
+				// error_name = false;
+			// }else{
+			// 	// 有相同用户名时的操作
+			// 	$('#user_name').next().html('用户已存在').show();
+			// 	error_name = true;
+			// }
 		}
 	}
 
