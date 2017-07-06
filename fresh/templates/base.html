@@ -6,6 +6,16 @@
 	<link rel="stylesheet" type="text/css" href="/static/css/reset.css">
 	<link rel="stylesheet" type="text/css" href="/static/css/main.css">
 	<script type="text/javascript" src="/static/js/jquery-1.12.4.min.js"></script>
+	<script>
+//		$(function () {
+			$.get('/user/', {},function (data) {
+			if(data){
+			    $('.login_info').show().children('em').html(data.name);
+			    $('.login_btn').hide();
+			}
+        })
+//        })
+	</script>
     {%block script%}
     {%endblock script%}
 </head>
@@ -25,11 +35,11 @@
 				</div>
 				<div class="user_link fl">
 					<span>|</span>
-					<a href="/user_center_info/">用户中心</a>
+					<a href="/info/">用户中心</a>
 					<span>|</span>
 					<a href="/cart/">我的购物车</a>
 					<span>|</span>
-					<a href="/user_center_order/">我的订单</a>
+					<a href="/order/">我的订单</a>
 				</div>
 			</div>
 		</div>
@@ -37,18 +47,15 @@
 {%endblock head%}
 {%block shopping%}
 	<div class="search_bar clearfix">
-		<a href="/" class="logo fl"><img src="images/logo.png"></a>
-
+		<a href="/" class="logo fl"><img src="/static/images/logo.png"></a>
 		<div class="sub_page_name fl">|&nbsp;&nbsp;&nbsp;&nbsp;{{inner_title|default:'用户中心'}}</div>
 		<div class="search_con fr">
 			<input type="text" class="input_text fl" name="" placeholder="搜索商品">
 			<input type="button" class="input_btn fr" name="" value="搜索">
 		</div>
-
 	</div>
 {%endblock shopping%}
-{%block body%}
-{%endblock body%}
+{%block body%}{%endblock body%}
 	<div class="footer no-mp">
 		<div class="foot_link">
 			<a href="#">关于我们</a>

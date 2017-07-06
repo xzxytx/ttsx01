@@ -7,7 +7,8 @@ import datetime
 # Create your views here.
 
 def index(request):
-    return render(request, 'index.html')
+    context = {'title':'天天生鲜-首页'}
+    return render(request, 'index.html', context)
 
 def register(request):
     context = {'title':'天天生鲜-注册'}
@@ -45,23 +46,23 @@ def login(request):
     context = {'title':'天天生鲜-登录','uname':uname}
     return render(request, 'tt_user/login.html', context)
 
-def user_judge(request):
-    vl = request.GET
-    uname = vl.get('uname')
-    upwd = vl.get('upwd')
-    list = UserInfo.objects.filter(uname=uname)
-    context = {'pwd':0,'name':0}
-    print '11111111111111111111111111111111'
-    # print(list[0].uname)
-    print '22222222222222222222222222222222'
-    if list:
-        context['name'] = 1
-        s1 = sha1()
-        s1.update(upwd)
-        upwd = s1.hexdigest()
-        if list[0].upwd == upwd:
-            context['pwd'] = 1
-    return JsonResponse(context)
+# def user_judge(request):
+#     vl = request.GET
+#     uname = vl.get('uname')
+#     upwd = vl.get('upwd')
+#     list = UserInfo.objects.filter(uname=uname)
+#     context = {'pwd':0,'name':0}
+#     print '11111111111111111111111111111111'
+#     # print(list[0].uname)
+#     print '22222222222222222222222222222222'
+#     if list:
+#         context['name'] = 1
+#         s1 = sha1()
+#         s1.update(upwd)
+#         upwd = s1.hexdigest()
+#         if list[0].upwd == upwd:
+#             context['pwd'] = 1
+#     return JsonResponse(context)
 
 def userok(request):
     vl = request.POST
@@ -79,6 +80,9 @@ def userok(request):
         upwd = s1.hexdigest()
         # print upwd
         if list[0].upwd == upwd:
+            print list[0].id
+            request.session['uid'] = list[0].id
+            request.session.set_expiry(0)
             response = redirect('/')
             if uwrite:
                 response.set_cookie('uname', uname, expires=datetime.datetime.now() + datetime.timedelta(days = 7))
@@ -99,3 +103,31 @@ def userok(request):
     return render(request, 'tt_user/login.html/', context)
 
     # return render(request, 'index.html')
+
+
+def user(request):
+    # print '1111111111111111111111'
+    uid = request.session.get('uid')
+    user = UserInfo.objects.filter(id=uid)[0]
+    context = {'name':user.uname}
+    return JsonResponse(context)
+
+
+def info(request):
+    context = {'title':'天天生鲜-用户中心'}
+    return render(request, 'tt_user/info.html', context)
+
+
+def order(request):
+    context = {'title': '天天生鲜-用户中心'}
+    return render(request, 'tt_user/order.html', context)
+
+
+def site(request):
+    context = {'title': '天天生鲜-用户中心'}
+    return render(request, 'tt_user/site.html', context)
+
+
+def cart(request):
+    context = {'title': '天天生鲜-购物车','inner_title':'购物车'}
+    return render(request, 'tt_user/cart.html', context)
