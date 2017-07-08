@@ -7,14 +7,32 @@
 	<link rel="stylesheet" type="text/css" href="/static/css/main.css">
 	<script type="text/javascript" src="/static/js/jquery-1.12.4.min.js"></script>
 	<script>
-//		$(function () {
+		$(function () {
 			$.get('/user/', {},function (data) {
-			if(data){
-			    $('.login_info').show().children('em').html(data.name);
-			    $('.login_btn').hide();
-			}
+				if(data) {
+                    if (data.uid > 0) {
+                        $('.login_info').show().children('em').html(data.name);
+                        $('.login_btn').hide();
+                    } else {
+                        $('.login_info').hide();
+                        $('.login_btn').show();
+                    }
+                }
+
+//				address info site.html
+				// 北京市 海淀区 东北旺西路8号中关村软件园 （李思 收） 182****7528
+				if(data.uname == '空'){
+				    $('.site_con dd').html('无')
+				}else{
+					$('.site_con dd').html(data.addr + '&nbsp;&nbsp;('+data.uname+'收)&nbsp;&nbsp;' + data.tel);
+				}
+//				info info.html
+				$('.user_info_list li').eq(0).html($('.user_info_list li').eq(0).html()+data.name).next()
+					.html($('.user_info_list li').eq(1).html()+data.tel)
+					.next().html($('.user_info_list li').eq(2).html() + data.addr);
+        });
+
         })
-//        })
 	</script>
     {%block script%}
     {%endblock script%}
@@ -27,19 +45,20 @@
 			<div class="fr">
 				<div class="login_info fl">
 					欢迎您：<em>张 山</em>
+					<a href=" /exit/">退出</a>
 				</div>
 				<div class="login_btn fl">
-					<a href="/login/">登录</a>
+					<a href=" /login/">登录</a>
 					<span>|</span>
-					<a href="/register/">注册</a>
+					<a href=" /register/">注册</a>
 				</div>
 				<div class="user_link fl">
 					<span>|</span>
-					<a href="/info/">用户中心</a>
+					<a href=" /info/">用户中心</a>
 					<span>|</span>
-					<a href="/cart/">我的购物车</a>
+					<a href=" /cart/">我的购物车</a>
 					<span>|</span>
-					<a href="/order/">我的订单</a>
+					<a href=" /order/">我的订单</a>
 				</div>
 			</div>
 		</div>

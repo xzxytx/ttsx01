@@ -5,10 +5,9 @@ from models import *
 from hashlib import sha1
 import datetime
 # Create your views here.
+class a():
+    pass
 
-def index(request):
-    context = {'title':'天天生鲜-首页'}
-    return render(request, 'index.html', context)
 
 def register(request):
     context = {'title':'天天生鲜-注册'}
@@ -65,20 +64,19 @@ def login(request):
 #     return JsonResponse(context)
 
 def userok(request):
-    vl = request.POST
+    # vl = request.POST
+    vl = request.GET
     uname = vl.get('username')
     upwd = vl.get('pwd')
     uwrite = vl.get('checked')
-    # str = '%s---%s' % (uname, upwd)
 
     list = UserInfo.objects.filter(uname=uname)
-    context = {'pwd':'','name':'','uname':uname,'upwd':upwd}
+    context = {'pwd':'','name':'','uname':uname,'upwd':upwd, 'ok':0}
 
     if list:
         s1 = sha1()
         s1.update(upwd)
         upwd = s1.hexdigest()
-        # print upwd
         if list[0].upwd == upwd:
             print list[0].id
             request.session['uid'] = list[0].id
@@ -88,46 +86,96 @@ def userok(request):
                 response.set_cookie('uname', uname, expires=datetime.datetime.now() + datetime.timedelta(days = 7))
             else:
                 response.set_cookie('uname', '', max_age=-1)
-            # return HttpResponse('登录成功')
-            return response
-            # return HttpResponseRedirect('/', context)
+            context['ok'] = 1
+            return JsonResponse(context)
         else:
-            # 密码错误
+            print '登录失败　密码错误'
             context['pwd'] = '密码错误'
-            # return JsonResponse(context)
-            return render(request, 'tt_user/login.html/', context)
-            # return HttpResponseRedirect(request, '/', context)
+            # return render(request, 'tt_user/login.html/', context)
+            return JsonResponse(context)
 
     # 帐号不存在
     context['name'] = '帐号不存在'
-    return render(request, 'tt_user/login.html/', context)
+    # return render(request, 'tt_user/login.html/', context)
+    return JsonResponse(context)
 
-    # return render(request, 'index.html')
 
-
+# user info
 def user(request):
-    # print '1111111111111111111111'
+    # user id
     uid = request.session.get('uid')
+    if uid == -1:
+        return HttpResponseRedirect('/')
     user = UserInfo.objects.filter(id=uid)[0]
-    context = {'name':user.uname}
+    # user address info
+    # addr = UserInfo.objects.filter(address__id=1)
+    try:
+        addr = address.objects.filter(user_id_id=uid)[0]
+    except Exception:
+        addr = a
+        addr.aname = '空'
+        addr.aaddr = '空'
+        addr.atel = '空'
+        addr.acode = '空'
+    context = {'name':user.uname, 'uname':addr.aname, 'addr':addr.aaddr, 'tel':addr.atel, 'code':addr.acode, 'uid':uid}
     return JsonResponse(context)
 
 
 def info(request):
-    context = {'title':'天天生鲜-用户中心'}
-    return render(request, 'tt_user/info.html', context)
+    uid = request.session.get('uid')
+    if uid > 0:
+        context = {'title':'天天生鲜-用户中心'}
+        return render(request, 'tt_user/info.html', context)
+    else:
+        return HttpResponseRedirect('/login/')
 
 
 def order(request):
-    context = {'title': '天天生鲜-用户中心'}
-    return render(request, 'tt_user/order.html', context)
+    uid = request.session.get('uid')
+    if uid > 0:
+        context = {'title': '天天生鲜-用户中心'}
+        return render(request, 'tt_user/order.html', context)
+    else:
+        return HttpResponseRedirect('/login/')
 
 
 def site(request):
-    context = {'title': '天天生鲜-用户中心'}
-    return render(request, 'tt_user/site.html', context)
+    uid = request.session.get('uid')
+    if uid > 0:
+        context = {'title': '天天生鲜-用户中心'}
+        return render(request, 'tt_user/site.html', context)
+    else:
+        return HttpResponseRedirect('/login/')
+
+
+def site_addr(request):
+    user = request.POST
+    uname = user.get('uname')
+    uinner = user.get('uinner')
+    ucode = user.get('ucode')
+    utel = user.get('utel')
+    # print uname,uinner,ucode,utel  # 测试用
+    uid = request.session.get('uid') # 用户id
+    try:
+        # addr = UserInfo.objects.filter(address__id=1)
+        addr = address.objects.filter(user_id=uid)[0]
+    except Exception:
+        addr = address()
+    addr.aname = uname
+    addr.aaddr = uinner
+    addr.atel = utel
+    addr.acode = ucode
+    addr.user_id_id = uid
+    addr.save()
+    # addr = address.objects.filter(id=uid)[0]
+    return HttpResponseRedirect('/site/')
 
 
 def cart(request):
     context = {'title': '天天生鲜-购物车','inner_title':'购物车'}
     return render(request, 'tt_user/cart.html', context)
+
+
+def exit(request):
+    request.session['uid'] = -1
+    return HttpResponseRedirect('/')

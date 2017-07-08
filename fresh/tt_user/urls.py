@@ -11,5 +11,7 @@ urlpatterns = [
     url(r'^info/$', views.info),
     url(r'^order/$', views.order),
     url(r'^site/$', views.site),
+    url(r'^site_addr/$', views.site_addr),
     url(r'^cart/$', views.cart),
+    url(r'^exit/$', views.exit),
 ]

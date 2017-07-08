@@ -45,10 +45,34 @@
 			$('.pwd_error').html('{{pwd}}').show();
 			// 表单事件
 			$('form').submit(function () {
-			    $('.name_input').blur();
-			    $('.pass_input').blur();
-			    return error_pwd && error_name;
+			    return false;
+//			    $('.name_input').blur();
+//			    $('.pass_input').blur();
+//			    return error_pwd && error_name;
             });
+			// ----------------
+			 $('.input_submit').click(function () {
+				$('.name_input').blur();
+				$('.pass_input').blur();
+
+				if(error_pwd && error_name){
+					$.get('/userok/', {'username':$('.name_input').val(), 'pwd':$('.pass_input').val(), 'checked':$('#checkbox').val()}, function (data) {
+					    if(data.ok == 1){
+					        location.href='/';
+						}else{
+							$('.user_error').html(data.name).show();
+							$('.pwd_error').html(data.pwd).show();
+						}
+
+
+					});
+
+				}
+
+			});
+
+			// ------------
+
 //				var name = 0;
 //				var pwd = 0;
 
@@ -105,17 +129,17 @@
 			<div class="login_form fr">
 				<div class="login_title clearfix">
 					<h1>用户登录</h1>
-					<a href="/register/">立即注册</a>
+					<a href=" /register/">立即注册</a>
 				</div>
 				<div class="form_input">
-					<form method="post" action="/userok/">
+					<form method="post" action=" /userok/">
 						{%csrf_token%}
 						<input type="text" name="username" class="name_input" placeholder="请输入用户名" value="{{uname}}">
 						<div class="user_error">输入错误</div>
 						<input type="password" name="pwd" class="pass_input" placeholder="请输入密码" value="{{upwd}}">
 						<div class="pwd_error">输入错误</div>
 						<div class="more_input clearfix">
-							<input type="checkbox" name="checked" checked="checked" value="1">
+							<input type="checkbox" name="checked" checked="checked" id="checkbox">
 							<label>记住用户名</label>
 							<a href="#">忘记密码</a>
 						</div>
