@@ -42,6 +42,9 @@ def register_valid(request):
 
 def login(request):
     uname = request.COOKIES.get('uname', '')
+    print 'cookies里面对数据'
+    print uname
+    print '1111'
     context = {'title':'天天生鲜-登录','uname':uname}
     return render(request, 'tt_user/login.html', context)
 
@@ -69,10 +72,8 @@ def userok(request):
     uname = vl.get('username')
     upwd = vl.get('pwd')
     uwrite = vl.get('checked')
-
     list = UserInfo.objects.filter(uname=uname)
     context = {'pwd':'','name':'','uname':uname,'upwd':upwd, 'ok':0}
-
     if list:
         s1 = sha1()
         s1.update(upwd)
@@ -81,13 +82,15 @@ def userok(request):
             print list[0].id
             request.session['uid'] = list[0].id
             request.session.set_expiry(0)
-            response = redirect('/')
+            context['ok'] = 1
+            response = JsonResponse(context)
             if uwrite:
                 response.set_cookie('uname', uname, expires=datetime.datetime.now() + datetime.timedelta(days = 7))
+                print '存入'
             else:
                 response.set_cookie('uname', '', max_age=-1)
-            context['ok'] = 1
-            return JsonResponse(context)
+
+            return response
         else:
             print '登录失败　密码错误'
             context['pwd'] = '密码错误'

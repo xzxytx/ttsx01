@@ -52,11 +52,17 @@
             });
 			// ----------------
 			 $('.input_submit').click(function () {
+			     if($("#checkbox").is(":checked")){
+			         var a = true
+				 }else{
+			         var a = ''
+				 }
+
 				$('.name_input').blur();
 				$('.pass_input').blur();
 
 				if(error_pwd && error_name){
-					$.get('/userok/', {'username':$('.name_input').val(), 'pwd':$('.pass_input').val(), 'checked':$('#checkbox').val()}, function (data) {
+					$.get('/userok/', {'username':$('.name_input').val(), 'pwd':$('.pass_input').val(), 'checked':a}, function (data) {
 					    if(data.ok == 1){
 					        location.href='/';
 						}else{
@@ -70,7 +76,7 @@
 				}
 
 			});
-
+			//
 			// ------------
 
 //				var name = 0;

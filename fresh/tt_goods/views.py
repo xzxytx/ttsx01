@@ -1,6 +1,7 @@
 #coding=utf-8
 from django.shortcuts import render
 from models import *
+from django.core.paginator import Paginator
 # Create your views here.
 
 def index(request):
@@ -16,6 +17,43 @@ def index(request):
     context = {'title':'天天生鲜-首页', 'data':list}
     return render(request, 'index.html', context)
 
-def list(request):
-    context = {'title':'天天生鲜-商品列表'}
+def list(request, type, order, page):
+    # title img kg $
+    t = TypeInfo.objects.filter(id=type)[0]
+    # print t.ttitle
+    new = t.goodsinfo_set.order_by('-id')[0:2]  # 2 new
+    age = 2
+    if order == '2':
+        list = t.goodsinfo_set.order_by('gprice')  # 价格
+        active = 'active2'
+        age = 4
+    elif order == '3':
+        list = t.goodsinfo_set.order_by('-gclick')  # click
+        active = 'active3'
+    elif order == '4':
+        list = t.goodsinfo_set.order_by('-gprice')  # 价格
+        active = 'active2'
+        age = 2
+    else:
+        list = t.goodsinfo_set.order_by('-id')  # 排序 默认
+        active = 'active1'
+    p = Paginator(list, 1)
+    print p.page_range
+    de = p.page(page)  # 那一页的数据
+    context = {'title':'天天生鲜-商品列表', 'new':new, 'de':de,
+               'id':type, active:'active', 'age':age, 'Paginator':p, 'order':order,
+               'prev':de.number-1, 'next':de.number+1
+               }
     return render(request, 'tt_goods/list.html', context)
+
+
+def place(request):
+    context = {'title':'天天生鲜-提交订单'}
+    return render(request, 'tt_goods/place.html', context)
+
+
+def detail(request, id):
+    goods = GoodsInfo.objects.filter(id=id)[0]
+    # typeinfo = goods.gtype.ttitle
+    context = {'title':'天天生鲜-商品详情', 'goods':goods}
+    return render(request, 'tt_goods/detail.html', context)
