@@ -4,6 +4,10 @@ from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from models import *
 from hashlib import sha1
 import datetime
+
+
+# from ttsx01.fresh.tt_goods.models import GoodsInfo
+
 # Create your views here.
 class a():
     pass
@@ -110,6 +114,7 @@ def user(request):
     if uid == -1:
         return HttpResponseRedirect('/')
     user = UserInfo.objects.filter(id=uid)[0]
+
     # user address info
     # addr = UserInfo.objects.filter(address__id=1)
     try:
@@ -128,6 +133,8 @@ def info(request):
     uid = request.session.get('uid')
     if uid > 0:
         context = {'title':'天天生鲜-用户中心'}
+        # 历史记录
+        #
         return render(request, 'tt_user/info.html', context)
     else:
         return HttpResponseRedirect('/login/')

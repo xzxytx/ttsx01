@@ -53,6 +53,10 @@ def place(request):
 
 
 def detail(request, id):
+    # 存储－－> session
+    # 1.获取用户ｉｄ　　　２．获取商品ｉｄ　　　３．用户ｉｄ为键，商品ｉｄ为值存入session  失败：关闭浏览器就过期过期
+
+    #
     goods = GoodsInfo.objects.filter(id=id)[0]
     # typeinfo = goods.gtype.ttitle
     context = {'title':'天天生鲜-商品详情', 'goods':goods}
