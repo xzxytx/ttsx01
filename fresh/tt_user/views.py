@@ -46,9 +46,6 @@ def register_valid(request):
 
 def login(request):
     uname = request.COOKIES.get('uname', '')
-    print 'cookies里面对数据'
-    print uname
-    print '1111'
     context = {'title':'天天生鲜-登录','uname':uname}
     return render(request, 'tt_user/login.html', context)
 
@@ -83,20 +80,16 @@ def userok(request):
         s1.update(upwd)
         upwd = s1.hexdigest()
         if list[0].upwd == upwd:
-            print list[0].id
             request.session['uid'] = list[0].id
             request.session.set_expiry(0)
             context['ok'] = 1
             response = JsonResponse(context)
             if uwrite:
                 response.set_cookie('uname', uname, expires=datetime.datetime.now() + datetime.timedelta(days = 7))
-                print '存入'
             else:
                 response.set_cookie('uname', '', max_age=-1)
-
             return response
         else:
-            print '登录失败　密码错误'
             context['pwd'] = '密码错误'
             # return render(request, 'tt_user/login.html/', context)
             return JsonResponse(context)
@@ -134,6 +127,10 @@ def info(request):
     if uid > 0:
         context = {'title':'天天生鲜-用户中心'}
         # 历史记录
+        # 查找
+        info = address.objects.filter(user_id=uid)[0]
+        sid = info.arecord
+        context['sid'] = sid
         #
         return render(request, 'tt_user/info.html', context)
     else:
@@ -189,3 +186,13 @@ def cart(request):
 def exit(request):
     request.session['uid'] = -1
     return HttpResponseRedirect('/')
+
+def record(request):
+    sid = request.GET.get('sid')
+    uid = request.session.get('uid')
+    info = address.objects.filter(user_id=uid)[0]
+    info.arecord = sid
+    info.save()
+    print info.arecord
+    print sid
+    return JsonResponse({'a': 'hello', 'h2': 'world'})

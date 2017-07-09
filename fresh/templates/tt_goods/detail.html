@@ -1,4 +1,12 @@
 {% extends "base.html"%}
+{%block script%}
+<script>
+	$(function () {
+	    var sid = {{goods.id}}
+		$.get('/record/', {'sid':sid});
+    });
+</script>
+{%endblock script%}
 {%block shopping%}
 	<div class="search_bar clearfix">
 		<a href="/" class="logo fl"><img src="/static/images/logo.png"></a>

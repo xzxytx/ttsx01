@@ -2,6 +2,7 @@
 from django.shortcuts import render
 from models import *
 from django.core.paginator import Paginator
+from django.http import JsonResponse
 # Create your views here.
 
 def index(request):
@@ -61,3 +62,15 @@ def detail(request, id):
     # typeinfo = goods.gtype.ttitle
     context = {'title':'天天生鲜-商品详情', 'goods':goods}
     return render(request, 'tt_goods/detail.html', context)
+
+def shopping(request):
+    goods = ''
+    sid = request.GET.get('sid')
+    goods = GoodsInfo.objects.filter(id=sid)[0]
+    context = {
+        'title':goods.gtitle, 'img':str(goods.gpic), 'gprice':goods.gprice, 'kg':goods.gunit
+    }
+    return JsonResponse(context)
+
+def a(request):
+    return JsonResponse({'a':1})

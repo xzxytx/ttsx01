@@ -1,4 +1,24 @@
 {% extends "base.html"%}
+{%block script%}
+	<script>
+		$(function () {
+			var id = {{sid}}
+			$.get('/shopping/', {'sid':id}, function (data) {
+//				$('.goods_type_list li a img').attr('src','34j45435');
+				$('#img').html('<img src=/static/'+data.img+'>');
+				$('.prize').html(data.gprice);
+				$('.unit').html(data.gprice +'/'+ data.kg);
+				$('#pash').html(data.title);
+			});
+
+//			$.get('/a/',{'sid':id},function () {
+//				alert('123123');
+//            })
+
+        });
+
+	</script>
+{%endblock script%}
 {%block body%}
 	<div class="main_con clearfix">
 		<div class="left_menu_con clearfix">
@@ -24,8 +44,8 @@
 					<ul class="goods_type_list clearfix">
 						{%for i in '12312'%}
 				<li>
-					<a href="../tt_goods/detail.html"><img src="/static/{{goods.gpic}}"></a>
-					<h4><a href="../tt_goods/detail.html">{{goods.gtitle}}</a></h4>
+					<a href="../tt_goods/detail.html" id="img"><img src="/static/{{goods.gpic}}"></a>
+					<h4><a href="../tt_goods/detail.html" id="pash">{{goods.gtitle}}{{sid}}132123123</a></h4>
 					<div class="operate">
 						<span class="prize">￥16.80</span>
 						<span class="unit">16.80/500g</span>
