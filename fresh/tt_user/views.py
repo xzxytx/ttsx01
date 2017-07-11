@@ -4,6 +4,7 @@ from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from models import *
 from hashlib import sha1
 import datetime
+from tt_goods.models import GoodsInfo
 
 
 # from ttsx01.fresh.tt_goods.models import GoodsInfo
@@ -46,9 +47,9 @@ def register_valid(request):
 
 def login(request):
     uname = request.COOKIES.get('uname', '')
-    print 'cookies里面对数据'
-    print uname
-    print '1111'
+    # print 'cookies里面对数据'
+    # print uname
+    # print '1111'
     context = {'title':'天天生鲜-登录','uname':uname}
     return render(request, 'tt_user/login.html', context)
 
@@ -133,7 +134,15 @@ def info(request):
     uid = request.session.get('uid')
     if uid > 0:
         context = {'title':'天天生鲜-用户中心'}
-        # 历史记录
+        # 历史记录  读取session得到ｉｄ
+        sid_list = request.session.get('sid'+str(uid), '')
+        goods = []
+        if sid_list:
+            for sid in sid_list:
+                g = GoodsInfo.objects.filter(id=sid)
+                goods += g
+            context['goods'] = goods
+        # print goods[0].id
         #
         return render(request, 'tt_user/info.html', context)
     else:
@@ -181,9 +190,7 @@ def site_addr(request):
     return HttpResponseRedirect('/site/')
 
 
-def cart(request):
-    context = {'title': '天天生鲜-购物车','inner_title':'购物车'}
-    return render(request, 'tt_user/cart.html', context)
+
 
 
 def exit(request):

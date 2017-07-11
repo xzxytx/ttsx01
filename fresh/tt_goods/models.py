@@ -22,4 +22,3 @@ class GoodsInfo(models.Model):
     gkucun = models.IntegerField(default=100)  # goods much
     gcontent = HTMLField()  # inner
     gtype = models.ForeignKey('TypeInfo')  # join
-

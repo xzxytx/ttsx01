@@ -1,0 +1,149 @@
+{% extends "base.html"%}
+{%block script%}
+	<script>
+		$(function () {
+
+			$('.pagenation a').hide().eq(-1).show().parent().children().eq(0).show();
+			$('.active').show().prev().show().prev().show();
+			$('.active').next().show().next().show();
+			var left = {{page.number}} - 2;
+			right = left + 4;
+			var sum = {{page.paginator.page_range}}
+			sum1 = sum.length;
+			if(right < sum1){
+			    $('#r').show();
+            }else {
+			    $('#r').hide();
+			}
+
+            if(left > 1){
+			    $('#l').show();
+			}else {
+                $('#l').hide();
+			}
+//			上一页　　与　下一页pagenation
+			if({{page.number}} > 1){
+                var prev = {{page.number}} - 1;
+                $('.pagenation').html('<a href=?q={{query}}&amp;page=' + prev + '>上一页</a>' + $('.pagenation').html());
+			}
+			if({{page.number}} < sum1){
+			    var next = {{page.number}} + 1;
+			    $('.pagenation').html($('.pagenation').html() + '<a href=?q={{query}}&amp;page=' + next + '>下一页</a>');
+            }
+
+
+        });
+	</script>
+{%endblock script%}
+{%block shopping%}
+	<div class="search_bar clearfix">
+		<a href="/" class="logo fl"><img src="/static/images/logo.png"></a>
+		<div class="search_con fl">
+			<form method='get' action="/search/" target="_blank">
+			<input type="text" class="input_text fl" name="q" placeholder="搜索商品">
+			<input type="submit" class="input_btn fr" name="" value="搜索">
+				<form>
+		</div>
+		<div class="guest_cart fr">
+			<a href="/cart/" class="cart_name fl">我的购物车</a>
+			<div class="goods_count fl">1</div>
+		</div>
+	</div>
+{%endblock shopping%}
+{%block body%}
+	<div class="navbar_con">
+		<div class="navbar clearfix">
+			<div class="subnav_con fl">
+				<h1>全部商品分类</h1>	
+				<span></span>			
+				<ul class="subnav">
+					<li><a href="#" class="fruit">新鲜水果</a></li>
+					<li><a href="#" class="seafood">海鲜水产</a></li>
+					<li><a href="#" class="meet">猪牛羊肉</a></li>
+					<li><a href="#" class="egg">禽类蛋品</a></li>
+					<li><a href="#" class="vegetables">新鲜蔬菜</a></li>
+					<li><a href="#" class="ice">速冻食品</a></li>
+				</ul>
+			</div>
+			<ul class="navlist fl">
+				<li><a href="">首页</a></li>
+				<li class="interval">|</li>
+				<li><a href="">手机生鲜</a></li>
+				<li class="interval">|</li>
+				<li><a href="">抽奖</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="breadcrumb">
+		<a href="#">搜索结果：</a>
+		<!--<span>></span>-->
+		<!--<a href="#">新鲜水果</a>-->
+	</div>
+
+	<div class="main_wrap clearfix">
+
+		<div class="l_wrap fl clearfix">
+			<div class="new_goods">
+				<h3>新品推荐</h3>
+				<ul>
+					{%for i in new%}
+					<!--i.title       i.gprice-->
+					<li>
+						<a href="/{{i.id}}/"><img src="/static/{{i.gpic}}"></a>
+						<h4><a href="#">{{i.gtitle}}</a></h4>
+						<div class="prize">￥{{i.gprice}}</div>
+					</li>
+					{%endfor%}
+				</ul>
+			</div>
+		</div>
+
+
+		<div class="r_wrap fr clearfix">
+			<div class="sort_bar">
+				<a href="/list{{id}}_1_1" class="{{active1}}">默认</a>
+				<a href="/list{{id}}_{{age}}_1" class="{{active2}}">价格</a>
+				<a href="/list{{id}}_3_1" class="{{active3}}">人气</a>
+			</div>
+
+			<ul class="goods_type_list clearfix">
+                {%for item in page%}
+				<li>
+					<a href="/{{item.object.id}}/"><img src="/static/{{item.object.gpic}}"></a>
+					<h4><a href="/detail/">{{item.object.gtitle}}</a></h4>
+					<div class="operate">
+						<span class="prize">￥{{item.object.gprice}}</span>
+						<span class="unit">{{item.object.gprice}}/{{i.gunit}}</span>
+						<a href="#" class="add_goods" title="加入购物车"></a>
+					</div>
+				</li>
+                {%empty%}
+                <li>没有查到</li>
+				{%endfor%}
+			</ul>.
+			<div class="pagenation">
+				{%if de.has_previous%}
+					<a href="/list{{id}}_{{order}}_{{prev}}"><上一页</a>
+				{%endif%}
+
+				<a id="l">...</a>
+
+				{%for pindex in page.paginator.page_range%}
+				{%if pindex == page.number%}
+				<a href="#" class="active">{{pindex}}</a>
+				{%else%}
+				<a href="?q={{query}}&amp;page={{pindex}}">{{pindex}}</a>
+				{%endif%}
+				{%endfor%}
+
+				<a id="r">...</a>
+
+				{%if de.has_next%}
+					<a href="/list{{id}}_{{order}}_{{next}}">下一页></a>
+				{%endif%}
+			</div>
+			{{page.paginator.page_range}}
+		</div>
+	</div>
+{%endblock body%}

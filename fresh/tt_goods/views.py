@@ -55,9 +55,48 @@ def place(request):
 def detail(request, id):
     # 存储－－> session
     # 1.获取用户ｉｄ　　　２．获取商品ｉｄ　　　３．用户ｉｄ为键，商品ｉｄ为值存入session  失败：关闭浏览器就过期过期
-
+    uid = request.session.get('uid')
+    # 读取session 拼接值
+    sidlist = request.session.get('sid'+str(uid), '')
+    print sidlist
+    if sidlist:
+        if int(id) in sidlist:
+            sidlist.remove(int(id))
+        if len(sidlist) >=5:
+            sidlist.pop()
+        sidlist.insert(0, int(id))
+    else:
+        sidlist = [int(id)]
+    # print sidlist
+    request.session['sid'+str(uid)] = sidlist
+    request.session.set_expiry(0)
     #
     goods = GoodsInfo.objects.filter(id=id)[0]
     # typeinfo = goods.gtype.ttitle
     context = {'title':'天天生鲜-商品详情', 'goods':goods}
     return render(request, 'tt_goods/detail.html', context)
+
+def query(request):
+    return render(request, 'tt_goods/query.html')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
