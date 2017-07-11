@@ -14,4 +14,5 @@ urlpatterns = [
     url(r'^site_addr/$', views.site_addr),
 
     url(r'^exit/$', views.exit),
+    url(r'^record/$', views.record),
 ]
