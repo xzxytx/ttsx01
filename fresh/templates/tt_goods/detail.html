@@ -2,7 +2,7 @@
 {%block script%}
 	<script>
 		$(function () {
-		    $('#show_count').text('12');
+//		    $('#show_count').text('12');
 		    $('#age').hide();
 			$('#add_cart').click(function () {
 			    var count = $('.num_show').val();
@@ -10,7 +10,11 @@
 					$('#age').text(data.goods_num)
                 });
             });
-        })
+
+        });
+			$.get('/goods_count/',function (data) {
+				$('#show_count').text(data.goods_num)
+			})
 	</script>
 {%endblock script%}
 {%block shopping%}

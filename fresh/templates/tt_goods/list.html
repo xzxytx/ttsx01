@@ -20,6 +20,9 @@
 			}
 
 
+		$.get('/goods_count/',function (data) {
+		    $('.goods_count').text(data.goods_num);
+			})
         });
 	</script>
 {%endblock script%}
@@ -32,7 +35,7 @@
 		</div>
 		<div class="guest_cart fr">
 			<a href="/cart/" class="cart_name fl">我的购物车</a>
-			<div class="goods_count fl">1</div>
+			<div class="goods_count fl">0</div>
 		</div>
 	</div>
 {%endblock shopping%}

@@ -3,6 +3,11 @@
 	<script type="text/javascript" src="/static/js/jquery-1.12.4.min.js"></script>
 	<script type="text/javascript" src="/static/js/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="/static/js/slide.js"></script>
+	<script>
+		$.get('/goods_count/',function (data) {
+				$('#show_count').text(data.goods_num)
+			})
+	</script>
 {%endblock script%}
 {%block shopping%}
 	<div class="search_bar clearfix">
@@ -103,6 +108,9 @@
 
 		oFruit.onclick = function(){
 			window.location.href = 'tt_goods/list.html';
-		}
+		};
+
+
+
 	</script>
 {%endblock script_bottom%}

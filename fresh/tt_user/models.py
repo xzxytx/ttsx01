@@ -16,7 +16,7 @@ class address(models.Model):
     aaddr = models.CharField(max_length=100)
     atel = models.CharField(max_length=11)
     acode = models.CharField(max_length=6)
-    arecord = models.CharField(max_length=40)  # 历史记录
+    # arecord = models.CharField(max_length=40)  # 历史记录
     user_id = models.ForeignKey('UserInfo')
 
 

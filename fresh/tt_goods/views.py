@@ -2,6 +2,7 @@
 from django.shortcuts import render
 from models import *
 from django.core.paginator import Paginator
+from tt_cart.models import CartInfo
 from django.http import JsonResponse
 # Create your views here.
 
@@ -49,7 +50,17 @@ def list(request, type, order, page):
 
 
 def place(request):
-    context = {'title':'天天生鲜-提交订单'}
+    a = request.GET.get('id')
+    a = a.encode('utf-8')
+    a = a.split(',')
+    cart_list = []
+    for i in a:
+        if i != ',' and i != '':
+            cart = CartInfo.objects.filter(id=int(i))[0]
+            cart_list.append(cart)
+
+
+    context = {'title':'天天生鲜-提交订单', 'cart_list':cart_list}
     return render(request, 'tt_goods/place.html', context)
 
 

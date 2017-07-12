@@ -31,12 +31,19 @@ def add_cart(request):
     print goods_num
     return JsonResponse({'goods_num':goods_num})
 
+def goods_count(request):
+    uid = request.session.get('uid')
+    goods_kind_num_list = CartInfo.objects.filter(user=uid)  # 商品种类个数
+    goods_num = 0
+    for goods in goods_kind_num_list:
+        goods_num += goods.num
+    return JsonResponse({'goods_num': goods_num})
+
 def cart(request):
     context = {'title': '天天生鲜-购物车','inner_title':'购物车'}
     uid = request.session.get('uid')
     goods_list = CartInfo.objects.filter(user=uid)
     context['goods_list'] = goods_list
-    print goods_list
     return render(request, 'tt_cart/cart.html', context)
 
 
