@@ -60,10 +60,9 @@
 
 				$('.name_input').blur();
 				$('.pass_input').blur();
-
+				// csrf_token
 				if(error_pwd && error_name){
-				    alert('11');
-					$.get('/userok/', {'username':$('.name_input').val(), 'pwd':$('.pass_input').val(), 'checked':a}, function (data) {
+					$.post('/userok/',{'username':$('.name_input').val(), 'pwd':$('.pass_input').val(), 'checked':a,'csrfmiddlewaretoken':$('input:first').val()}, function (data) {
 					    if(data.ok == 1){
 					        location.href='/';
 						}else{

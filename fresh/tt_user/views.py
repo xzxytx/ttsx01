@@ -73,8 +73,8 @@ def login(request):
 #     return JsonResponse(context)
 
 def userok(request):
-    # vl = request.POST
-    vl = request.GET
+    vl = request.POST
+    # vl = request.GET
     uname = vl.get('username')
     upwd = vl.get('pwd')
     uwrite = vl.get('checked')
@@ -94,6 +94,7 @@ def userok(request):
             else:
                 response.set_cookie('uname', '', max_age=-1)
             return response
+            # return HttpResponseRedirect('/')
         else:
             context['pwd'] = '密码错误'
             # return render(request, 'tt_user/login.html/', context)
@@ -150,7 +151,7 @@ def order(request):
     uid = request.session.get('uid')
     if uid > 0:
         order_list = OrderInfo.objects.filter(user=uid)
-        context = {'title': '天天生鲜-用户中心', 'order_list':order_list}
+        context = {'title': '天天生鲜-用户中心', 'order_list':order_list, 'order_count':len(order_list)}
         return render(request, 'tt_user/order.html', context)
     else:
         return HttpResponseRedirect('/login/')

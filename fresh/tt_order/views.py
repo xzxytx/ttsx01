@@ -3,13 +3,14 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from tt_cart.models import CartInfo
 from models import *
+from django.db import transaction
 from django.core.paginator import Paginator
 # Create your views here.
-
+@transaction.atomic()
 def place_order(request):
     cart_id_list = request.GET.get('cart_list')
     cart_id_list = cart_id_list.split(',')
-
+    sid = transaction.savepoint()
     try:
         # 存
         num_price = 0
@@ -49,7 +50,9 @@ def place_order(request):
             num_price += price*100 * count
         order.num_price = (num_price+1000)/100
         order.save()
+        transaction.savepoint_commit(sid)
     except Exception:
+        transaction.savepoint_rollback(sid)
         return JsonResponse({'ok':0})
 
 

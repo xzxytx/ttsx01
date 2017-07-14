@@ -14,8 +14,6 @@ def index(request):
         new = t.goodsinfo_set.order_by('-id')[0:4]  # id
         dict = {'t':t, 'click':g, 'new':new}
         list.append(dict)
-        print g
-    print '321321'
     context = {'title':'天天生鲜-首页', 'data':list}
     return render(request, 'index.html', context)
 
