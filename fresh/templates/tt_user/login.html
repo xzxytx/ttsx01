@@ -62,6 +62,7 @@
 				$('.pass_input').blur();
 
 				if(error_pwd && error_name){
+				    alert('11');
 					$.get('/userok/', {'username':$('.name_input').val(), 'pwd':$('.pass_input').val(), 'checked':a}, function (data) {
 					    if(data.ok == 1){
 					        location.href='/';
@@ -124,6 +125,7 @@
 {%block head%}{%endblock head%}
 {%block shopping%}{%endblock shopping%}
 {%block body%}
+				<!--csrf_token-->
 	<div class="login_top clearfix">
 		<a href="/" class="login_logo"><img src="/static/images/logo02.png"></a>
 	</div>

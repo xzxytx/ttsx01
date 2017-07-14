@@ -50,6 +50,7 @@ def list(request, type, order, page):
 
 
 def place(request):
+    # 获取商品ｉｄ
     a = request.GET.get('id')
     a = a.encode('utf-8')
     a = a.split(',')
@@ -58,6 +59,7 @@ def place(request):
         if i != ',' and i != '':
             cart = CartInfo.objects.filter(id=int(i))[0]
             cart_list.append(cart)
+
 
 
     context = {'title':'天天生鲜-提交订单', 'cart_list':cart_list}

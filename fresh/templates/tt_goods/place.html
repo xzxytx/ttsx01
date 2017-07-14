@@ -5,7 +5,7 @@
 //	    总价　计算函数
 		var cart_num = 0;
 		$('.col07').each(function () {
-			cart_num += parseFloat($(this).text())*100;
+			cart_num += parseFloat($(this).text())*100* ($(this).prev().text());
         });
 //		更新总价等值
 		$('.total_goods_count em').text($('.goods_list_td').length).next().text(cart_num/100 + '元');
@@ -52,6 +52,7 @@
 			<li class="col05">小计</li>		
 		</ul>
 		{%for cart in cart_list%}
+		<input type="hidden" value="{{cart.id}}">
 		<ul class="goods_list_td clearfix">
 			<li class="col01">{{forloop.counter}}</li>
 			<li class="col02"><img src="/static/{{cart.goods.gpic}}"></li>
@@ -90,16 +91,35 @@
 	<script type="text/javascript">
 		$('#order_btn').click(function() {
 			localStorage.setItem('order_finish',2);
+//
+			var cart_id_list = [];
+			$('.goods_list_td').prev().each(function () {
+				cart_id_list.push($(this).val());
+            });
+			// 请求　存入数据
+			$.get('/place_order/',{'cart_list':cart_id_list+''}, function (data) {
+				if(data.ok == '1'){  // 成功后
+				    cartoon();
+				}else{  // 失败
+					$('.popup p').text('订单提交失败,请稍后重试');
+				    cartoon();
+				}
+//				动画
+				function cartoon() {
+					$('.popup_con').fadeIn('fast', function() {
+						setTimeout(function(){
+							$('.popup_con').fadeOut('fast',function(){
+								window.location.href = '/';
+							});
+						},3000)
 
-			$('.popup_con').fadeIn('fast', function() {
-
-				setTimeout(function(){
-					$('.popup_con').fadeOut('fast',function(){
-						window.location.href = '../index.html';
-					});	
-				},3000)
-				
+					});
+                }
+				//
 			});
+
+//
+
 		});
 	</script>
 {%endblock script_bottom%}

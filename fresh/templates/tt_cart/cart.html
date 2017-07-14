@@ -40,7 +40,7 @@
         });
 //		价格函数
 		function show() {
-			$(this).find('.col07').text(parseFloat($(this).find('.col05').text())*100*$(this).find('.num_show').val()/100 + '元');
+			$(this).find('.col07').text(parseFloat($(this).find('.col05').text())*1000*$(this).find('.num_show').val()/1000 + '元');
         }
 //        价格
 		$('.cart_list_td').each(show);

@@ -5,6 +5,7 @@ from models import *
 from hashlib import sha1
 import datetime
 from tt_goods.models import GoodsInfo
+from tt_order.models import OrderInfo
 
 
 # from ttsx01.fresh.tt_goods.models import GoodsInfo
@@ -148,7 +149,8 @@ def info(request):
 def order(request):
     uid = request.session.get('uid')
     if uid > 0:
-        context = {'title': '天天生鲜-用户中心'}
+        order_list = OrderInfo.objects.filter(user=uid)
+        context = {'title': '天天生鲜-用户中心', 'order_list':order_list}
         return render(request, 'tt_user/order.html', context)
     else:
         return HttpResponseRedirect('/login/')
